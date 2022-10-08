@@ -2,7 +2,7 @@ const Moralis = require("moralis-v1/node")
 require("dotenv").config()
 const contractAddresses = require("./constants/networkMapping.json")
 let chainId = process.env.chainId || 31337
-let moralisChainId = chainId == "31337" ? "1337" : chainId
+let moralisChainId = chainId == "31337" ? "0x539" : chainId
 const contractAddress = contractAddresses[chainId]["NftMarketplace"][0]
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL
@@ -10,7 +10,8 @@ const appId = process.env.NEXT_PUBLIC_APP_ID
 const masterKey = process.env.masterKey
 
 async function main() {
-    await Moralis.start({ serverUrl, appId, masterKey })
+    const object = await Moralis.start({ serverUrl, appId, masterKey })
+    console.log(`the object after connection is s${object}`)
     console.log(`Working with contarct address ${contractAddress}`)
 
     let itemListedOptions = {
@@ -132,7 +133,8 @@ async function main() {
     const cancledResponse = await Moralis.Cloud.run("watchContractEvent", itemCancledOptions, {
         useMasterKey: true,
     })
-    if (listedResponse.successs && cancledResponse.success && boughtResponse.success) {
+    console.log(`the resposne is having SUCCESS: ${listedResponse.success}`)
+    if (listedResponse.success && cancledResponse.success && boughtResponse.success) {
         console.log("Success! database Updated with events")
     } else {
         console.log("Something went wrong")
